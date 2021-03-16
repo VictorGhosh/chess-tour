@@ -3,6 +3,9 @@ package chess;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class that represents a knight located on a {@code board} object.
+ */
 public class Knight {
 
 	/**
@@ -14,21 +17,25 @@ public class Knight {
 	 * List of past locations of knight
 	 */
 	private List<Location> past;
-	
+
+	/**
+	 * The {@code Board} object the knight is on
+	 */
 	private Board board;
 
 	/**
-	 * Make knight object at ({@code x}, {@code y})
+	 * Make knight object at Location {@code loc} and on Board {@code b}. This
+	 * constructor assumes {@code loc} is valid for {@code b}.
 	 * 
-	 * @param x x coordinate of knight
-	 * @param y y coordinate of knight
+	 * @param loc location to create knight
+	 * @param b   board for knight to be on
 	 */
 	public Knight(Location loc, Board b) {
 		this.past = new ArrayList<>();
 		this.board = b;
 		move(loc);
 	}
-	
+
 	/**
 	 * Returns the current location of the knight
 	 * 
@@ -40,16 +47,14 @@ public class Knight {
 
 	/**
 	 * Returns the location of the best move for the knight to move. In other words
-	 * the move with the least number of possible moves following it and that the knight
-	 * has not been to.
+	 * the move with the least number of possible moves following it and that the
+	 * knight has not been to.
 	 * 
 	 * @return Location of best move
 	 */
 	public Location bestMove() {
 		List<Location> allMoves = moves(this.cur);
 
-		System.out.println(allMoves);
-		
 		int leastMoves = moves(allMoves.get(0)).size();
 		Location res = allMoves.get(0);
 		for (int i = allMoves.size() - 1; i >= 0; i--) {
@@ -58,35 +63,20 @@ public class Knight {
 				res = allMoves.get(i);
 			}
 		}
-
-		//TODO: This is a cleaner way to do it but its broken for some reason
-//		int numNextMoves = moves(allMoves.get(0)).size();
-//		Location move = allMoves.get(0);
-//		for (Location i : allMoves) {
-//			if (moves(i).size() < numNextMoves) {
-//				move = i;
-//				numNextMoves = moves(i).size();
-//			}
-//		}
 		return res;
 	}
 
 	/**
-	 * Returns a list of all possible moves for knight from {@code loc}. List
-	 * does not include illegal moves or moves the knight has already made.
+	 * Returns a list of all possible moves for knight from {@code loc}. List does
+	 * not include illegal moves or moves the knight has already made.
 	 * 
-	 * @return List of possible moves
+	 * @param loc location to find moves from
+	 * @return List of possible moves for knight from {@code loc}
 	 */
 	public List<Location> moves(Location loc) {
 		List<Location> res = new ArrayList<>();
+		int[][] trans = { { -2, -1 }, { -2, 1 }, { -1, -2 }, { -1, 2 }, { 1, -2 }, { 1, 2 }, { 2, -1 }, { 2, 1 } };
 
-		int[][] trans = {
-				{-2,-1}, {-2,1},
-				{-1,-2}, {-1,2},
-				{1,-2}, {1,2},
-				{2,-1}, {2,1}
-		};
-		
 		for (int[] i : trans) {
 			Location newLoc = new Location(loc.x() + i[0], loc.y() + i[1]);
 			if (squareIsNew(newLoc) && this.board.realSquare(newLoc)) {
@@ -109,15 +99,21 @@ public class Knight {
 		}
 		return true;
 	}
-	
-	//TODO: update the javaDoc
+
 	/**
-	 * Update the list of past location with the current location of the knight and
-	 * move knight to {@code loc}
+	 * Move this knight to {@code loc} and add the new location to list of past
+	 * locations. Returns {@code null} if {@code loc} is not on the board. Otherwise
+	 * the new location of the knight is returned.
+	 * 
+	 * @param loc Location to move to
+	 * @return null if {@code loc} is out of bounds, otherwise the location that was
+	 *         moved to.
 	 */
-	//TODO: Evaluate this one. its kind of pointless I think
-	//TODO: add null shit for when location not ok
 	public Location move(Location loc) {
+		if (!board.realSquare(loc)) {
+			return null;
+		}
+
 		this.cur = loc;
 		this.past.add(this.cur);
 		return loc;

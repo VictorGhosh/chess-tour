@@ -1,8 +1,19 @@
 package chess;
 
+/**
+ * A class that represents a tour by a {@code Knight} object on a {@code Board}
+ * object
+ */
 public class Tour {
-	
+
+	/**
+	 * The Board the tour is to be played on
+	 */
 	private Board board;
+
+	/**
+	 * The Knight on the board
+	 */
 	private Knight player;
 
 	/**
@@ -19,7 +30,7 @@ public class Tour {
 	 * @param y vertical dimension of board
 	 */
 	public Tour(int x, int y) {
-		this.board = new Board(x,y);
+		this.board = new Board(x, y);
 	}
 
 	/**
@@ -56,7 +67,7 @@ public class Tour {
 		if (!hasNext()) {
 			return null;
 		}
-		
+
 		return this.player.move(this.player.bestMove());
 	}
 
