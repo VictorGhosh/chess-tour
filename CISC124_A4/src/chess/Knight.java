@@ -31,39 +31,10 @@ public class Knight {
 	 * @param b   board for knight to be on
 	 */
 	public Knight(Location loc, Board b) {
+		this.cur = loc;
 		this.past = new ArrayList<>();
 		this.board = b;
-		move(loc);
-	}
-
-	/**
-	 * Returns the current location of the knight
-	 * 
-	 * @return The current location of the knight
-	 */
-	public Location getCurrentLoc() {
-		return this.cur;
-	}
-
-	/**
-	 * Returns the location of the best move for the knight to move. In other words
-	 * the move with the least number of possible moves following it and that the
-	 * knight has not been to.
-	 * 
-	 * @return Location of best move
-	 */
-	public Location bestMove() {
-		List<Location> allMoves = moves(this.cur);
-
-		int leastMoves = moves(allMoves.get(0)).size();
-		Location res = allMoves.get(0);
-		for (int i = allMoves.size() - 1; i >= 0; i--) {
-			if (moves(allMoves.get(i)).size() < leastMoves) {
-				leastMoves = moves(allMoves.get(i)).size();
-				res = allMoves.get(i);
-			}
-		}
-		return res;
+		this.past.add(loc);
 	}
 
 	/**
@@ -73,7 +44,7 @@ public class Knight {
 	 * @param loc location to find moves from
 	 * @return List of possible moves for knight from {@code loc}
 	 */
-	public List<Location> moves(Location loc) {
+	private List<Location> moves(Location loc) {
 		List<Location> res = new ArrayList<>();
 		int[][] trans = { { -2, -1 }, { -2, 1 }, { -1, -2 }, { -1, 2 }, { 1, -2 }, { 1, 2 }, { 2, -1 }, { 2, 1 } };
 
@@ -101,22 +72,52 @@ public class Knight {
 	}
 
 	/**
-	 * Move this knight to {@code loc} and add the new location to list of past
-	 * locations. Returns {@code null} if {@code loc} is not on the board. Otherwise
-	 * the new location of the knight is returned.
+	 * Returns the location of the best move for the knight to move. In other words
+	 * the move with the least number of possible moves following it and that the
+	 * knight has not been to.
 	 * 
-	 * @param loc Location to move to
-	 * @return null if {@code loc} is out of bounds, otherwise the location that was
-	 *         moved to.
+	 * @return Location of best move and null if there is no move.
 	 */
-	public Location move(Location loc) {
-		if (!board.realSquare(loc)) {
+	private Location bestMove() {
+		if (!hasMove()) {
 			return null;
 		}
 
-		this.cur = loc;
+		List<Location> allMoves = moves(this.cur);
+
+		int leastMoves = moves(allMoves.get(0)).size();
+		Location res = allMoves.get(0);
+		for (int i = allMoves.size() - 1; i >= 0; i--) {
+			if (moves(allMoves.get(i)).size() < leastMoves) {
+				leastMoves = moves(allMoves.get(i)).size();
+				res = allMoves.get(i);
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Move this knight to the best next location. Assumes a next location exists.
+	 * 
+	 * @param loc Location to move to
+	 * @return location that was moved to.
+	 */
+	public Location move() {
+		this.cur = bestMove();
 		this.past.add(this.cur);
-		return loc;
+		return this.cur;
+	}
+
+	/**
+	 * Returns true if the knight has a possible move and false otherwise.
+	 * 
+	 * @return true if the knight can move and false if it cannot
+	 */
+	public boolean hasMove() {
+		if (moves(this.cur).isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 
 }

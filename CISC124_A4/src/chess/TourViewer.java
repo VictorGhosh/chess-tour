@@ -32,27 +32,34 @@ public class TourViewer {
 		}
 	}
 	
-//	public static int runTest(int x, int y, Location start) {
-//		drawBoard(x, y);
-//		Tour t = new Tour(x, y);
-//		
-//		t.startTour(start);
-//		Location curr = start;
-//		int i = 0;
-//		while (t.hasNext()) {
-//			Location next = t.next();
-//			System.out.println(i + " : moving from " + curr + " to " + next);
-//			StdDraw.line(curr.x(), curr.y(), next.x(), next.y());
-//			StdDraw.filledCircle(next.x(), next.y(), 0.1);
-//			curr = new Location(next);
-//			// Thread.sleep(500);
-//			i++;
-//		}
-//		
-//		return i;
-//	}
+	public static int runTest(int x, int y, Location start) {
+		drawBoard(x, y);
+		Tour t = new Tour(x, y);
+		
+		t.startTour(start);
+		Location curr = start;
+		int i = 2;
+		while (t.hasNext()) {
+			Location next = t.next();
+			System.out.println(i + " : moving from " + curr + " to " + next);
+			StdDraw.line(curr.x(), curr.y(), next.x(), next.y());
+			StdDraw.filledCircle(next.x(), next.y(), 0.1);
+			curr = new Location(next);
+			// Thread.sleep(500);
+			i++;
+		}
+		
+		return i;
+	}
 	
 	public static void main(String[] args) throws Exception {
+		runTest(8,8,new Location(3,2));
+		Thread.sleep(1000);
+		runTest(8,16,new Location(3,2));
+		Thread.sleep(1000);
+		runTest(32,7,new Location(3,2));
+		Thread.sleep(1000);
+		
 		// edit the next line to draw a board of the size that you are testing
 		drawBoard(40, 40);
 
@@ -67,7 +74,7 @@ public class TourViewer {
 		Location start = new Location(3, 5);
 		t.startTour(start);
 		Location curr = start;
-		int i = 0;
+		int i = 2;
 		while (t.hasNext()) {
 			Location next = t.next();
 			System.out.println(i + " : moving from " + curr + " to " + next);

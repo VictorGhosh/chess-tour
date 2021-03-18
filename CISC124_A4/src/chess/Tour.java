@@ -50,10 +50,7 @@ public class Tour {
 	 * @return True if valid move exists and false otherwise.
 	 */
 	public boolean hasNext() {
-		if (this.player.moves(this.player.getCurrentLoc()).isEmpty()) {
-			return false;
-		}
-		return true;
+		return this.player.hasMove();
 	}
 
 	/**
@@ -68,7 +65,7 @@ public class Tour {
 			return null;
 		}
 
-		return this.player.move(this.player.bestMove());
+		return this.player.move();
 	}
 
 }
